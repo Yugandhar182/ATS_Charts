@@ -39,19 +39,10 @@
 
             if (response.ok) {
                 const jsonData = await response.json();
-              console.log(jsonData);
+                console.log(jsonData);
 
                 // Create an array of unique month names dynamically
                 const monthNames = [...new Set(jsonData.map(item => item.monthLabel))];
-                monthNames.sort((a, b) => {
-                    const [aMonth, aYear] = a.split('/');
-                    const [bMonth, bYear] = b.split('/');
-                    if (+aYear !== +bYear) {
-                        return +aYear - +bYear;
-                    } else {
-                        return +aMonth - +bMonth;
-                    }
-                });
 
                 // Dynamically extract user names from the data
                 userNames = Object.keys(jsonData[0]).filter((key) => key !== 'monthLabel');
@@ -78,121 +69,110 @@
         }
     }
 
-
-
-
     const colors = ['Tomato', 'DodgerBlue', 'Gold', 'LimeGreen', 'Purple', 'Orange', 'Crimson', 'RoyalBlue'];
     let lastYear = null;
-    let lastMonth = null;
-    let currentYear=null;
-    // Function to create or update the chart
-   
     // Function to create or update the chart
     function updateChart() {
+        let lastYear = null;
 
+        chartData = chartData.map((item, index) => {
+            const dateParts = item.x.split('/');
+            const month = parseInt(dateParts[0]);
+            const year = parseInt(dateParts[1]);
 
+            // Convert the month number to a three-letter month abbreviation (e.g., Jan, Feb)
+            const monthAbbreviation = new Date(year, month - 1, 1).toLocaleString('default', { month: 'short' });
 
-chartData = chartData.map((item, index) => {
-const dateParts = item.x.split('/');
-const month = parseInt(dateParts[0]);
-const year = parseInt(dateParts[1]);
+            // Append the year to the abbreviation only if it's different from the last year or the first data point
+            const formattedDate = (lastYear !== year || index === 0) ? `${monthAbbreviation} ${year}` : monthAbbreviation;
 
-// Convert the month number to a three-letter month abbreviation (e.g., Jan, Feb)
-const monthAbbreviation = new Date(year, month - 1, 1).toLocaleString('default', { month: 'short' });
+            if (lastYear !== year) {
+                lastYear = year; // Reset lastYear to the current year if it changes
+            }
 
-// Append the year to the abbreviation only if it's different from the last year or the first data point
-const formattedDate = (lastYear !== year || index === 0) ? `${monthAbbreviation} ${year}` : monthAbbreviation;
+            return {
+                x: formattedDate,
+                ...userNames.reduce((acc, userName) => {
+                    acc[userName] = item[userName];
+                    return acc;
+                }, {}),
+            };
+        });
 
-// Update the lastYear variable
-lastYear = year;
+        // Create and append the chart with the updated data source
+        const chart = new Chart({
+            primaryXAxis: {
+                valueType: 'Category',
+                majorGridLines: { width: 0 },
+                labelStyle: {
+                    size: '15px',
+                    fontWeight: 'normal',
+                },
+            },
+            primaryYAxis: {
+                edgeLabelPlacement: 'Shift',
+                majorTickLines: { width: 0 },
+                minorTickLines: { width: 0 },
+                lineStyle: { width: 0 },
+                labelFormat: '{value}M',
+                labelPlacement: 'OnTicks',
+                minimum: 0,
+                maximum: 5,
+                interval: 1,
+                title: 'Placement value',
+                titleStyle: {
+                    fontFamily: "'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana, sans-serif",
+                    fontWeight: 'Normal',
+                    color: '#767676;',
+                    size: '18px',
+                },
+                labelStyle: {
+                    size: '15px',
+                    fontWeight: 'normal',
+                },
+            },
+            height: '350px',
+            series: userNames.map((userName, index) => ({
+                type: 'StackingColumn',
+                dataSource: chartData,
+                xName: 'x',
+                width: 2,
+                fill: colors[index],
+                yName: userName,
+                columnSpacing: 0.2,
+                name: userName,
+                columnWidth: 0.5,
+            })),
+            tooltip: {
+                enable: true,
+                format: 'GDP ${point.y}',
+                fill: 'white',
+                textStyle: {
+                    color: 'black',
+                    fontWeight: 'bold',
+                },
+                border: {
+                    width: 4,
+                    color: 'whitesmoke',
+                },
+            },
+            legendSettings: { enableHighlight: true },
+        });
 
-return {
-    x: formattedDate,
-    ...userNames.reduce((acc, userName) => {
-        acc[userName] = item[userName];
-        return acc;
-    }, {}),
-};
-});
+        chart.appendTo('#container3');
+    }
 
+    onMount(() => {
+        getDatesFromLocalStorage();
+        fetchData(startDate, endDate);
+    });
 
-// Create and append the chart with the updated data source
-const chart = new Chart({
-    primaryXAxis: {
-        valueType: 'Category',
-        majorGridLines: { width: 0 },
-        labelStyle: {
-            size: '15px',
-            fontWeight: 'normal',
-        },
-    },
-    primaryYAxis: {
-        edgeLabelPlacement: 'Shift',
-        majorTickLines: { width: 0 },
-        minorTickLines: { width: 0 },
-        lineStyle: { width: 0 },
-        labelFormat: '{value}M',
-        labelPlacement: 'OnTicks',
-        minimum: 0,
-        maximum: 5,
-        interval: 1,
-        title: 'Placement value',
-        titleStyle: {
-            fontFamily: "'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana, sans-serif",
-            fontWeight: 'Normal',
-            color: '#767676;',
-            size: '18px',
-        },
-        labelStyle: {
-            size: '15px',
-            fontWeight: 'normal',
-        },
-    },
-           
-             height: '350px',
-
-    series: userNames.map((userName, index) => ({
-        type: 'StackingColumn',
-        dataSource: chartData,
-        xName: 'x',
-        width: 2,
-        fill: colors[index],
-        yName: userName,
-        columnSpacing: 0.2,
-        name: userName,
-       
-        columnWidth: 0.5,
-    })),
-    tooltip: {
-        enable: true,
-        format: 'GDP ${point.y}',
-        fill: 'white',
-        textStyle: {
-            color: 'black',
-            fontWeight: 'bold',
-        },
-        border: {
-            width: 4,
-            color: 'whitesmoke',
-        },
-    },
-    legendSettings: { enableHighlight: true },
-});
-
-chart.appendTo('#container3');
-}
-
-onMount(() => {
-getDatesFromLocalStorage();
-fetchData(startDate, endDate);
-});
-
-afterUpdate(() => {
-fetchData(startDate, endDate);
-updateChart();
-localStorage.setItem('startDate', startDate);
-localStorage.setItem('endDate', endDate);
-});
+    afterUpdate(() => {
+        fetchData(startDate, endDate);
+        updateChart();
+        localStorage.setItem('startDate', startDate);
+        localStorage.setItem('endDate', endDate);
+    });
 
 </script>
 
@@ -204,8 +184,6 @@ localStorage.setItem('endDate', endDate);
         <div id="container3"></div>
     </div>
 </div>
-  
-
 <style>
 
 .card {
