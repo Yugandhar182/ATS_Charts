@@ -103,7 +103,7 @@
           fontFamily: 'sans-serif'
         },
       },
-     
+      height: '350px',
       series: [
         {
           type: 'Bar',
