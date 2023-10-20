@@ -135,6 +135,7 @@
    justify-content: center; /* Center content vertically */
    border-radius: 0.25rem;
    box-shadow: 0 0 0 1px rgba(20,20,31,.05), 0 1px 3px 0 rgba(20,20,31,.15);
+   background-color: white;
  }
 
  
