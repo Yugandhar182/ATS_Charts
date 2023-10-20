@@ -2,11 +2,17 @@
   import { onMount, afterUpdate } from 'svelte';
   import { DateRangePicker } from '@syncfusion/ej2-calendars';
   import { dateStore } from './DateStore.js'; // Import the store
- 
+
   let daterangepicker;
- 
-  let startDate = localStorage.getItem('startDate') || '';
-  let endDate = localStorage.getItem('endDate') || '';
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // Adding 1 because months are zero-indexed
+
+  const lastYearStartMonth = `${currentYear - 1}-${currentMonth.toString().padStart(2, '0')}`;
+  const currentMonthDate = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+
+  let startDate = localStorage.getItem('startDate') || lastYearStartMonth;
+  let endDate = localStorage.getItem('endDate') || currentMonthDate;
 
   onMount(() => {
     initializeDateRangePicker(startDate, endDate);
@@ -26,12 +32,12 @@
   function initializeDateRangePicker(initialStartDate, initialEndDate) {
     daterangepicker = new DateRangePicker({
       placeholder: 'Select Range',
-      start: 'Year', 
-      depth: 'Year', 
+      start: 'Year',
+      depth: 'Year',
       format: 'MMM yyyy',
       value: [
-        new Date(initialStartDate || new Date()), // Initialize with either stored date or a default date
-        new Date(initialEndDate || new Date())   // Initialize with either stored date or a default date
+        new Date(initialStartDate),
+        new Date(initialEndDate)
       ],
       change: () => {
         const selectedDates = daterangepicker.getSelectedRange();
@@ -41,12 +47,10 @@
           localStorage.setItem('startDate', selectedStartDate);
           localStorage.setItem('endDate', selectedEndDate);
           dateStore.set({ startDate: selectedStartDate, endDate: selectedEndDate });
-         
         }
       }
     });
     daterangepicker.appendTo('#element');
-;
   }
 
   function formatSelectedDate(date) {
@@ -55,9 +59,8 @@
     const year = date.getFullYear();
     return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
   }
-
-
 </script>
+
 <div class="calendar-container">
   <div class="col-lg-12 control-section">
     <div id="wrapper">
