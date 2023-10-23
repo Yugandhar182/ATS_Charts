@@ -37,9 +37,9 @@
                 `${appData.service.endpoint}/dashboard/ats/data/placementmonthlyusermetrics?start=${startDate}&end=${endDate}&apiKey=${appData.service.apiKey}`
             );
 
+           
             if (response.ok) {
                 const jsonData = await response.json();
-                console.log(jsonData);
 
                 // Create an array of unique month names dynamically
                 const monthNames = [...new Set(jsonData.map(item => item.monthLabel))];
@@ -51,7 +51,7 @@
                 chartData = monthNames.map((monthName) => {
                     const monthData = jsonData.filter((item) => item.monthLabel === monthName);
 
-                    const transformedData = { x: monthName };
+                    const transformedData = { monthLabel: monthName };
                     userNames.forEach((userName) => {
                         transformedData[userName] = monthData.reduce((total, item) => total + item[userName], 0) / 1000000;
                     });
@@ -70,36 +70,18 @@
     }
 
     const colors = ['Tomato', 'DodgerBlue', 'Gold', 'LimeGreen', 'Purple', 'Orange', 'Crimson', 'RoyalBlue'];
-    let lastYear = null;
+
     // Function to create or update the chart
     function updateChart() {
-        let lastYear = null;
+        let data = [];
 
-        chartData = chartData.map((item, index) => {
-            const dateParts = item.x.split('/');
-            const month = parseInt(dateParts[0]);
-            const year = parseInt(dateParts[1]);
-
-            // Convert the month number to a three-letter month abbreviation (e.g., Jan, Feb)
-            const monthAbbreviation = new Date(year, month - 1, 1).toLocaleString('default', { month: 'short' });
-
-            // Append the year to the abbreviation only if it's different from the last year or the first data point
-            const formattedDate = (lastYear !== year || index === 0) ? `${monthAbbreviation} ${year}` : monthAbbreviation;
-
-            if (lastYear !== year) {
-                lastYear = year; // Reset lastYear to the current year if it changes
-            }
-
-            return {
-                x: formattedDate,
-                ...userNames.reduce((acc, userName) => {
-                    acc[userName] = item[userName];
-                    return acc;
-                }, {}),
-            };
-        });
-
-        // Create and append the chart with the updated data source
+chartData = chartData.map((val, index) => {
+    var month = parseInt(val.monthLabel.split("/")[0]) - 1;
+    var year = parseInt(val.monthLabel.split("/")[1]);
+    val.monthLabel = new Date(year, month, 1);
+    data.push(val);
+    console.log("values", val);
+});
         const chart = new Chart({
             primaryXAxis: {
                 valueType: 'Category',
@@ -135,7 +117,7 @@
             series: userNames.map((userName, index) => ({
                 type: 'StackingColumn',
                 dataSource: chartData,
-                xName: 'x',
+                xName: 'monthLabel',
                 width: 2,
                 fill: colors[index],
                 yName: userName,
