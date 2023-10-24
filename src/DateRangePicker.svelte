@@ -84,7 +84,7 @@
 
   .calendar-container {
       position: absolute;
-      top: 30px; 
+      top: 50px; 
       right: 15px; 
       width: 300px;
       height: 60px;
