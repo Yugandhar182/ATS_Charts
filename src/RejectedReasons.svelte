@@ -57,19 +57,6 @@
     }
   }
 
-  function onPointRender(args) {
-  // Check if chart and series are defined
-  if (chart && args.series) {
-    // Customize the fill color based on the data point's index
-    const seriesIndex = args.series.index;
-    if (chart.series[seriesIndex]) {
-      const palette = chart.series[seriesIndex].palette;
-      if (palette) {
-        args.fill = palette[args.point.index % palette.length];
-      }
-    }
-  }
-}
 
   function updateChart() {
     const data = chartData.map(item => ({ ...item }));
@@ -134,7 +121,7 @@
           },
         },
       ],
-      pointRender: onPointRender,
+      
     });
 
     chart.appendTo('#container');
