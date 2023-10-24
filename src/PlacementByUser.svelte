@@ -36,10 +36,7 @@
             const response = await fetch(
                 `${appData.service.endpoint}/dashboard/ats/data/placementmonthlyusermetrics?start=${startDate}&end=${endDate}&apiKey=${appData.service.apiKey}`
             );
-
-           
-
-          if (response.ok) {
+                 if (response.ok) {
                 const jsonData = await response.json();
                 console.log(jsonData);
 
