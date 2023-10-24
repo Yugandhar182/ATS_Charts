@@ -10,7 +10,7 @@
     let startDate = '';
     let endDate = '';
     let userNames = []; // Array to hold user names
-    let noData = false;
+ 
 
     // Function to check if local storage has date information
     function getDatesFromLocalStorage() {
@@ -38,11 +38,23 @@
             );
 
            
-            if (response.ok) {
-                const jsonData = await response.json();
 
-                // Create an array of unique month names dynamically
-                const monthNames = [...new Set(jsonData.map(item => item.monthLabel))];
+          if (response.ok) {
+                const jsonData = await response.json();
+                console.log(jsonData);
+
+                const monthNames = [...new Set(jsonData.map((item) => item.monthLabel))];
+
+                          // Sort the month names in ascending order
+                          monthNames.sort((a, b) => {
+                              const [aMonth, aYear] = a.split('/');
+                              const [bMonth, bYear] = b.split('/');
+                              if (+aYear !== +bYear) {
+                                  return +aYear - +bYear;
+                              } else {
+                                  return +aMonth - +bMonth;
+                              }
+                          });
 
                 // Dynamically extract user names from the data
                 userNames = Object.keys(jsonData[0]).filter((key) => key !== 'monthLabel');
@@ -51,7 +63,7 @@
                 chartData = monthNames.map((monthName) => {
                     const monthData = jsonData.filter((item) => item.monthLabel === monthName);
 
-                    const transformedData = { monthLabel: monthName };
+                    const transformedData = { x: monthName };
                     userNames.forEach((userName) => {
                         transformedData[userName] = monthData.reduce((total, item) => total + item[userName], 0) / 1000000;
                     });
@@ -70,22 +82,36 @@
     }
 
     const colors = ['Tomato', 'DodgerBlue', 'Gold', 'LimeGreen', 'Purple', 'Orange', 'Crimson', 'RoyalBlue'];
+  
 
     // Function to create or update the chart
-    function updateChart() {
-        let data = [];
 
-chartData = chartData.map((val, index) => {
-    var month = parseInt(val.monthLabel.split("/")[0]) - 1;
-    var year = parseInt(val.monthLabel.split("/")[1]);
-    val.monthLabel = new Date(year, month, 1);
-    data.push(val);
-    console.log("values", val);
+    function updateChart() {
+        let lastYear = null;
+        chartData = chartData.map((item, index) => {
+    const dateParts = item.x.split('/');
+    const month = parseInt(dateParts[0]);
+    const year = parseInt(dateParts[1]);
+
+    const monthAbbreviation = new Date(year, month - 1, 1).toLocaleString('default', { month: 'short' });
+
+    // Display both the year and month
+    const formattedDate = `${monthAbbreviation} ${year}`;
+
+    return {
+        x: formattedDate,
+        ...userNames.reduce((acc, userName) => {
+            acc[userName] = item[userName];
+            return acc;
+        }, {}),
+    };
 });
+        // Create and append the chart with the updated data source
         const chart = new Chart({
             primaryXAxis: {
                 valueType: 'Category',
                 majorGridLines: { width: 0 },
+                
                 labelStyle: {
                     size: '15px',
                     fontWeight: 'normal',
@@ -117,7 +143,7 @@ chartData = chartData.map((val, index) => {
             series: userNames.map((userName, index) => ({
                 type: 'StackingColumn',
                 dataSource: chartData,
-                xName: 'monthLabel',
+                xName: 'x',
                 width: 2,
                 fill: colors[index],
                 yName: userName,
