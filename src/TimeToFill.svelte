@@ -207,6 +207,8 @@
    });
  
    afterUpdate(() => {
+     updateChart(); // Update the chart immediately
+ 
      localStorage.setItem('startDate', startDate);
      localStorage.setItem('endDate', endDate);
    });
