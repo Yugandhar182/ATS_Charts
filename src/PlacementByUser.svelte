@@ -169,7 +169,7 @@
 
     onMount(() => {
         getDatesFromLocalStorage();
-        fetchData(startDate, endDate);
+      
     });
 
     afterUpdate(() => {
