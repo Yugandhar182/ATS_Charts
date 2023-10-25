@@ -16,7 +16,7 @@
   if (storedStartDate && storedEndDate) {
     startDate = storedStartDate;
     endDate = storedEndDate;
-  
+    fetchData(startDate, endDate); // Fetch data when dates are loaded from local storage
   }
 }
 
@@ -49,7 +49,7 @@
     });
   
     afterUpdate(() => {
-   
+    
       localStorage.setItem('startDate', startDate);
       localStorage.setItem('endDate', endDate);
     });
