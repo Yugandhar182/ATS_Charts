@@ -203,7 +203,7 @@
  
      onMount(() => {
      getDatesFromLocalStorage(); // Try to get dates from local storage
-  
+   fetchData(startDate, endDate); // Fetch data on component mount
    });
  
    afterUpdate(() => {
