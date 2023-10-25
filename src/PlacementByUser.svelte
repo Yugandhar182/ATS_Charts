@@ -173,7 +173,7 @@
     });
 
     afterUpdate(() => {
-        fetchData(startDate, endDate);
+    
         updateChart();
         localStorage.setItem('startDate', startDate);
         localStorage.setItem('endDate', endDate);
