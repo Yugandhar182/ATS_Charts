@@ -49,7 +49,7 @@
     });
   
     afterUpdate(() => {
-      fetchData(startDate, endDate);
+   
       localStorage.setItem('startDate', startDate);
       localStorage.setItem('endDate', endDate);
     });
