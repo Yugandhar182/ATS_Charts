@@ -208,7 +208,7 @@
  
    afterUpdate(() => {
      fetchData(startDate, endDate); // Fetch data after updates
-     updateChart(); // Update the chart immediately
+   
  
      // Store the dates in local storage for future use
      localStorage.setItem('startDate', startDate);
