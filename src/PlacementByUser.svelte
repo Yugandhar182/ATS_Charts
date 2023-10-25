@@ -169,11 +169,11 @@
 
     onMount(() => {
         getDatesFromLocalStorage();
-        fetchData(startDate, endDate); // Fetch data whenever the date changes
+        fetchData(startDate, endDate); 
     });
 
     afterUpdate(() => {
-    
+      fetchData(startDate, endDate);
         updateChart();
         localStorage.setItem('startDate', startDate);
         localStorage.setItem('endDate', endDate);
