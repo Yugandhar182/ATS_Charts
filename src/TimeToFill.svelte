@@ -244,7 +244,7 @@ function getDatesFromLocalStorage() {
     border: 1px solid rgba(20,20,31,.12);
     border-radius: 0.25rem;
     margin: 40px;
-    top:5px;
+   margin-top:10px;
     
 
 }
