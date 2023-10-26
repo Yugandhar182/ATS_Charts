@@ -16,13 +16,7 @@
      let startDate = '';
      let endDate = '';
  
-
-
-
-     
-
- 
-    function getDatesFromLocalStorage() {
+function getDatesFromLocalStorage() {
     const storedStartDate = localStorage.getItem('startDate');
     const storedEndDate = localStorage.getItem('endDate');
 
@@ -155,7 +149,7 @@
                      yName: 'y',
                      yAxisName: 'splineAxis',
                      width: 2,
-                     fill: 'blue',
+                     fill: 'Tomato',
                      marker: {
                          visible: true,
                          width: 10,
