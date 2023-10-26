@@ -70,7 +70,7 @@
 
                     const transformedData = { x: monthName };
                     userNames.forEach((userName) => {
-                        transformedData[userName] = monthData.reduce((total, item) => total + item[userName], 0) / 1000000;
+                        transformedData[userName] = monthData.reduce((total, item) => total + item[userName], 0) / 1000;
                     });
 
                     return transformedData;
@@ -127,7 +127,7 @@
                 majorTickLines: { width: 0 },
                 minorTickLines: { width: 0 },
                 lineStyle: { width: 0 },
-                labelFormat: '{value}M',
+                labelFormat: '{value}k',
                 labelPlacement: 'OnTicks',
                 title: 'Placement value',
                 titleStyle: {
