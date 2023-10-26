@@ -136,7 +136,7 @@
   .card i {
     font-size: 13px;
     margin-right: 62px;
-    margin-bottom: -20px;
+    margin-bottom: -30px;
     text-align: center;
   }
 
