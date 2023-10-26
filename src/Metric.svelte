@@ -9,26 +9,48 @@
    let startDate = "";
    let endDate = "";
 
-   function getDatesFromLocalStorage() {
-  const storedStartDate = localStorage.getItem('startDate');
-  const storedEndDate = localStorage.getItem('endDate');
+ 
 
-  if (storedStartDate && storedEndDate) {
-    startDate = storedStartDate;
-    endDate = storedEndDate;
-    fetchData(startDate, endDate); // Fetch data when dates are loaded from local storage
+   function formatDate(date) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${day}/${month}/${year}`;
   }
-}
 
-    // Subscribe to the dateStore
-    dateStore.subscribe((value) => {
-  startDate = value.startDate;
-  endDate = value.endDate;
-  fetchData(startDate, endDate); // Fetch data whenever the date changes
-});
+  function getLastDayOfMonth(date) {
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return lastDay;
+  }
+
+  function getDatesFromLocalStorage() {
+    const storedStartDate = localStorage.getItem('startDate');
+    const storedEndDate = localStorage.getItem('endDate');
+
+    if (storedStartDate && storedEndDate) {
+      startDate = storedStartDate;
+      endDate = storedEndDate;
+    } else {
+      
+      const today = new Date();
+
+      startDate = formatDate(new Date(today.getFullYear() - 1, today.getMonth(), 1)); // Last year same month first day
+      endDate = formatDate(getLastDayOfMonth(today)); // Last day of the current month
+    }
+
+   
+  }
+   // Subscribe to the dateStore
+   dateStore.subscribe((value) => {
+      startDate = value.startDate;
+      endDate = value.endDate;
+      fetchData(startDate, endDate); 
+  });
+
 
 
     async function fetchData(startDate, endDate) {
+      if (startDate && endDate) { 
       try {
        
         const response = await fetch(`${appData.service.endpoint}/dashboard/ats/metrics?start=${startDate}&end=${endDate}&apiKey=${appData.service.apiKey}`);
@@ -43,16 +65,18 @@
         console.error("Error:", error);
       }
     }
-    onMount(() => {
-      getDatesFromLocalStorage(); // Try to get dates from local storage
-      fetchData(startDate, endDate); // Fetch data on component mount
-    });
+  }
+  onMount(() => {
+    getDatesFromLocalStorage(); // Try to get dates from local storage
+    fetchData(startDate, endDate);
   
-    afterUpdate(() => {
-    
-      localStorage.setItem('startDate', startDate);
-      localStorage.setItem('endDate', endDate);
-    });
+  });
+
+  afterUpdate(() => {
+  
+    localStorage.setItem('startDate', startDate);
+    localStorage.setItem('endDate', endDate);
+  });
  </script>
  {#if metrics !== null}
     <div class="card-container">
@@ -83,12 +107,13 @@
         </div>
 
         <div class="card"> <span class="hover-text">Avg.Candidates </span>
-          <i class="fa fa-user"style="margin-left:60px; margin-top:20px;" ></i>  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.avgCandidatesPerPlacement}</h5>
+          <i class="fa fa-user"style="margin-left:60px; margin-top:20px;text-align: center;" ></i>  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.avgCandidatesPerPlacement}</h5>
           <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Candidates/Jobs</p></div>
     </div>
     {/if}
 
-<style>.card-container {
+<style>
+.card-container {
   display: flex;
   margin: 0 32px; 
 
@@ -101,14 +126,14 @@
   margin: 10px;
   padding: 20px;
   box-sizing: border-box;
- margin-top: 120px;
+  margin-top: 120px;
 }
 
 .card h5 {
   font-size: 24px; /* Adjust the font size for h5 */
 
   text-align: center;
-  margin-top: -30px;
+  margin-top: -25px;
 }
 .fa-lg {
     font-size: 1.25em;
