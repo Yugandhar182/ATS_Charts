@@ -12,26 +12,34 @@
     let userNames = []; // Array to hold user names
  
 
-    // Function to check if local storage has date information
-    function getDatesFromLocalStorage() {
-        const storedStartDate = localStorage.getItem('startDate');
-        const storedEndDate = localStorage.getItem('endDate');
+   
 
-        if (storedStartDate && storedEndDate) {
-            startDate = storedStartDate;
-            endDate = storedEndDate;
-        }
+  function getDatesFromLocalStorage() {
+    const storedStartDate = localStorage.getItem('startDate');
+    const storedEndDate = localStorage.getItem('endDate');
+
+    if (storedStartDate && storedEndDate) {
+      startDate = storedStartDate;
+      endDate = storedEndDate;
+     
     }
 
-    // Subscribe to the dateStore
-    dateStore.subscribe((value) => {
-        startDate = value.startDate;
-        endDate = value.endDate;
-        fetchData(startDate, endDate); // Fetch data whenever the date changes
-    });
+    console.log('Stored startDate:', startDate);
+    console.log('Stored endDate:', endDate);
+  }
+
+
+     // Subscribe to the dateStore
+     dateStore.subscribe((value) => {
+      startDate = value.startDate;
+      endDate = value.endDate;
+      fetchData(startDate, endDate); // Fetch data when dates are loaded from local storage
+  });
+
 
 
     async function fetchData(startDate, endDate) {
+        if (startDate && endDate) {
         try {
             const response = await fetch(
                 `${appData.service.endpoint}/dashboard/ats/data/placementmonthlyusermetrics?start=${startDate}&end=${endDate}&apiKey=${appData.service.apiKey}`
@@ -77,7 +85,7 @@
             console.error('An error occurred while fetching data:', error);
         }
     }
-
+    }
     const colors = ['Tomato', 'DodgerBlue', 'Gold', 'LimeGreen', 'Purple', 'Orange', 'Crimson', 'RoyalBlue'];
   
 
@@ -169,14 +177,16 @@
 
     onMount(() => {
         getDatesFromLocalStorage();
-        fetchData(startDate, endDate); 
+        fetchData(startDate, endDate); // Fetch data after updates
+      
     });
 
     afterUpdate(() => {
-      fetchData(startDate, endDate);
+        
         updateChart();
         localStorage.setItem('startDate', startDate);
         localStorage.setItem('endDate', endDate);
+      
     });
 
 </script>
