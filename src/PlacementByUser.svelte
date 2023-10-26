@@ -129,9 +129,6 @@
                 lineStyle: { width: 0 },
                 labelFormat: '{value}M',
                 labelPlacement: 'OnTicks',
-                minimum: 0,
-                maximum: 5,
-                interval: 1,
                 title: 'Placement value',
                 titleStyle: {
                     fontFamily: "'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana, sans-serif",
