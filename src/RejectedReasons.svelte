@@ -14,7 +14,8 @@
   let startDate = '';
   let endDate = '';
 
-  // Function to check if local storage has date information
+
+ 
   function getDatesFromLocalStorage() {
     const storedStartDate = localStorage.getItem('startDate');
     const storedEndDate = localStorage.getItem('endDate');
@@ -22,7 +23,11 @@
     if (storedStartDate && storedEndDate) {
       startDate = storedStartDate;
       endDate = storedEndDate;
+     
     }
+
+    console.log('Stored startDate:', startDate);
+    console.log('Stored endDate:', endDate);
   }
 
   // Subscribe to the dateStore
@@ -32,8 +37,8 @@
     fetchData(startDate, endDate); // Fetch data whenever the date changes
   });
 
-
   async function fetchData(startDate, endDate) {
+    if (startDate && endDate) { 
     try {
     
       const response = await fetch(`${appData.service.endpoint}/dashboard/ats/data/rejectreasons?start=${startDate}&end=${endDate}&apiKey=${appData.service.apiKey}`);
@@ -56,7 +61,7 @@
       console.error("Error:", error);
     }
   }
-
+  }
 
   function updateChart() {
     const data = chartData.map(item => ({ ...item }));
@@ -129,18 +134,15 @@
 
 
 
-  // Call updateChartSize when the screen size changes
- 
-  
   onMount(() => {
     getDatesFromLocalStorage(); // Try to get dates from local storage
-   fetchData(startDate, endDate); // Fetch data on component mount
-    });
+    fetchData(startDate, endDate);
+  
+  });
 
   afterUpdate(() => {
-   fetchData(startDate, endDate);
-    updateChart(); // Update the chart immediately
-     localStorage.setItem('startDate', startDate);
+  
+    localStorage.setItem('startDate', startDate);
     localStorage.setItem('endDate', endDate);
   });
  
