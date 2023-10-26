@@ -76,103 +76,109 @@
     localStorage.setItem('endDate', endDate);
   });
  </script>
- {#if metrics !== null}
-    <div class="card-container">
-        <div class="card"> 
-          <span class="hover-text">Total Jobs</span>
-          <i class="fa fa-briefcase"style="margin-left:50px; margin-top:20px;" ></i><h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.totalJobs}</h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Jobs</p>
-          </div>
+{#if metrics !== null}
+   <div class="card-container">
+       <div class="card"> 
+         <span class="hover-text">Total Jobs</span>
+         <i class="fa fa-briefcase"></i><h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.totalJobs}</h5>
+         <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Jobs</p>
+         </div>
 
-        <div class="card"> <span class="hover-text">Total Placements</span>
-          <i class="fa fa-thumbs-o-up"  style="margin-left:50px; margin-top:20px; " ></i><h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.totalPlacements}</h5>
-          <p  class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Placements</p>
-        </div>
+       <div class="card"> <span class="hover-text">Total Placements</span>
+         <i class="fa fa-thumbs-o-up"  ></i><h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.totalPlacements}</h5>
+         <p  class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Placements</p>
+       </div>
 
-        <div class="card"  style="background-color:blue"> <span class="hover-text">Total Fee/Commission</span>
-          <h5 style="color:white;margin-top:15px" class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">GBP{metrics.totalCommission}</h5>
-          <p style="color:white;" class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Billing</p>
-        </div>
+       <div class="card"  style="background-color:blue"> <span class="hover-text">Total Fee/Commission</span>
+         <h5 style="color:white;" class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">GBP{metrics.totalCommission}</h5>
+         <p style="color:white;" class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Billing</p>
+       </div>
 
-        <div class="card"><span class="hover-text">Total Job Board Adverts</span>
-          <i class="fa fa-bullhorn"style="margin-left:55px; margin-top:20px;" ></i> <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.totalAdverts}</h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Adverts</p>
-        </div>
+       <div class="card"><span class="hover-text">Total Job Board Adverts</span>
+         <i class="fa fa-bullhorn" ></i> <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.totalAdverts}</h5>
+         <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Adverts</p>
+       </div>
 
-        <div class="card"><span class="hover-text">Avg.Time to Fill Days</span>
-          <i class="fa fa-clock-o"style="margin-left:55px; margin-top:20px;" ></i> <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.avgTimeToFillDays}</h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">TTF</p>
-        </div>
+       <div class="card"><span class="hover-text">Avg.Time to Fill Days</span>
+         <i class="fa fa-clock-o" ></i> <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" >{metrics.avgTimeToFillDays}</h5>
+         <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">TTF</p>
+       </div>
 
-        <div class="card"> <span class="hover-text">Avg.Candidates </span>
-          <i class="fa fa-user"style="margin-left:60px; margin-top:20px;text-align: center;" ></i>  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{metrics.avgCandidatesPerPlacement}</h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight">Candidates/Jobs</p></div>
-    </div>
-    {/if}
+       <div class="card">
+        <span class="hover-text">Avg.Time to Fill Days</span>
+        <i class="fa fa-user" ></i>
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"style="margin-left:15px;">{metrics.avgCandidatesPerPlacement}</h5>
+        <p class="font-normal text-gray-700 dark:text-gray-400 leading-tight" >Candidates/Jobs</p>
+      </div>
+      
+   </div>
+      
+   {/if}
+  
+    <style>
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* Stack children vertically */
+    width: calc(100vw / 6);
+    height: 120px;
+    background-color: white;
+    margin: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 120px;
+    border-radius: 2px solid black;
+    text-align: center;
+    position: relative; 
+  }
 
-<style>
-.card-container {
-  display: flex;
-  margin: 0 32px; 
+  .card i {
+    font-size: 13px;
+    margin-right: 62px;
+    margin-bottom: -20px;
+    text-align: center;
+  }
 
-}
-.card {
-  position: relative;
-  width: calc(100vw / 6);
-  height: 120px;
-  background-color:white;
-  margin: 10px;
-  padding: 20px;
-  box-sizing: border-box;
-  margin-top: 120px;
- border: 1px solid rgba(20,20,31,.12);
-}
+  .card h5 {
+    font-size: 24px;
+    text-align: center;
+  }
 
-.card h5 {
-  font-size: 24px; /* Adjust the font size for h5 */
-
-  text-align: center;
-  margin-top: -25px;
-}
-.fa-lg {
-    font-size: 1.25em;
-    line-height: .05em;
-    vertical-align: -0.075em;
-}
-
-
-.card p {
-  font-size: 16px; /* Adjust the font size for p */
-  color: #888c9b;
-
-  font-weight: 500;
-  font-size: 18px;
-  font-family: var(--tblr-font-sans-serif) ;
-  text-align: center;
-
-}
-
+  .card p {
+    font-size: 16px;
+    color: #888c9b;
+    font-weight: 500;
+    font-size: 18px;
+    font-family: var(--tblr-font-sans-serif);
+    text-align: center;
+    margin-top: -5px;
+    margin-left: 10px;
+    text-align: center;
+  }
 
   .hover-text {
-  display: none;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px;
-  border-radius: 5px;
-  top: -50%;
-  left: 0;
-  right: 0;
-  text-align: center; /* Center the text horizontally */
-  font-size: 16px; /* Adjust the font size for hover text */
-  z-index: 1;
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    top: -50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 16px;
+    z-index: 1;
+  }
 
-}
+  .card:hover .hover-text {
+    display: block;
+  }
 
-.card:hover .hover-text {
-  display: block;
- 
-}
-
-
+  .card-container {
+    display: flex;
+    margin: 0 32px;
+    justify-content: center;
+  }
 </style>
