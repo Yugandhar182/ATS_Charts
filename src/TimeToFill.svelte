@@ -16,6 +16,32 @@
      let startDate = '';
      let endDate = '';
  
+
+
+
+     
+
+ 
+    function getDatesFromLocalStorage() {
+    const storedStartDate = localStorage.getItem('startDate');
+    const storedEndDate = localStorage.getItem('endDate');
+
+    if (storedStartDate && storedEndDate) {
+      startDate = storedStartDate;
+      endDate = storedEndDate;
+     
+    }
+
+    console.log('Stored startDate:', startDate);
+    console.log('Stored endDate:', endDate);
+  }
+
+  // Subscribe to the dateStore
+  dateStore.subscribe((value) => {
+    startDate = value.startDate;
+    endDate = value.endDate;
+    fetchData(startDate, endDate); // Fetch data whenever the date changes
+  });
      // Calculate the start and end date objects
      const startDateObj = new Date(startDate);
      const endDateObj = new Date(endDate);
@@ -38,24 +64,9 @@
      }
  
  
-     function getDatesFromLocalStorage() {
-     const storedStartDate = localStorage.getItem('startDate');
-     const storedEndDate = localStorage.getItem('endDate');
- 
-     if (storedStartDate && storedEndDate) {
-       startDate = storedStartDate;
-       endDate = storedEndDate;
-     }
-   }
- 
-   // Subscribe to the dateStore
-   dateStore.subscribe((value) => {
-     startDate = value.startDate;
-     endDate = value.endDate;
-     fetchData(startDate, endDate); // Fetch data whenever the date changes
-   });
  
    async function fetchData(startDate, endDate) {
+    if (startDate && endDate) { 
          try {
             
             const response = await fetch(`${appData.service.endpoint}/dashboard/ats/data/placementmonthlymetrics?start=${startDate}&end=${endDate}&apiKey=${appData.service.apiKey}`);
@@ -89,7 +100,7 @@
              console.error('An error occurred:', error);
          }
      };
- 
+    };
   
  
      function updateChart() {
@@ -202,16 +213,17 @@
      }
  
      onMount(() => {
-     getDatesFromLocalStorage(); // Try to get dates from local storage
-   fetchData(startDate, endDate); // Fetch data on component mount
-   });
- 
-   afterUpdate(() => {
-     fetchData(startDate, endDate);
-     updateChart(); // Update the chart immediately
-     localStorage.setItem('startDate', startDate);
-     localStorage.setItem('endDate', endDate);
-   });
+    getDatesFromLocalStorage(); // Try to get dates from local storage
+    fetchData(startDate, endDate);
+  
+  });
+
+  afterUpdate(() => {
+    updateChart();
+    localStorage.setItem('startDate', startDate);
+    localStorage.setItem('endDate', endDate);
+    
+  });
  </script>
  
 <div class="card card-fluid">
