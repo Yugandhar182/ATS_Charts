@@ -86,9 +86,7 @@
         majorTickLines: { width: 0 },
         minorTickLines: { width: 0 },
         lineStyle: { width: 0 },
-        interval: 5,
-      minimum: 0,     // Set the minimum value for the Y-axis
-      maximum: yAxisMax, 
+        maximum: yAxisMax, 
         labelStyle: {
           size: '1rem',
           fontWeight: "400",
